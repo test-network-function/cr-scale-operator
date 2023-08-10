@@ -27,20 +27,20 @@ import (
 type MemcachedSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Memcached. Edit memcached_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Size int32 `json:"size"`
 }
 
 // MemcachedStatus defines the observed state of Memcached
 type MemcachedStatus struct {
+	Replicas int32  `json:"replicas"`
+	Selector string `json:"selector"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
-
+// +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas,selectorpath=.status.selector
 // Memcached is the Schema for the memcacheds API
 type Memcached struct {
 	metav1.TypeMeta   `json:",inline"`

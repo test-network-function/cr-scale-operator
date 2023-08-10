@@ -17,7 +17,7 @@ This repo is used to provide the code for deploying the custom resource for the 
 ```sh
 export KUBECONFIG=<cluster-kubeconfig>
 export IMG=<image-registry>.cr-scale-operator:<version>
-export NAMESPACE=<namespace>
+export NAMESPACE=<namespace> # You can skip this. In that case, the operator would be installed in cr-scale-operator-system namespace.
 
 ./scripts/build-deploy.sh $IMG $NAMESPACE
 ```

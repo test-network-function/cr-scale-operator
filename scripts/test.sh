@@ -1,3 +1,3 @@
 #!/bin/bash
 
-oc patch memcached memcached-sample -n $NAMESPACE -p '{"spec":{"size": 5}}' --type=merge
+oc patch memcached memcached-sample -p '{"spec":{"size": 0}}' --type=merge

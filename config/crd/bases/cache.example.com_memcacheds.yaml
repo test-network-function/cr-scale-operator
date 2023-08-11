@@ -61,6 +61,6 @@ spec:
     subresources:
       scale:
         labelSelectorPath: .status.selector
-        specReplicasPath: .spec.replicas
+        specReplicasPath: .spec.size
         statusReplicasPath: .status.replicas
       status: {}

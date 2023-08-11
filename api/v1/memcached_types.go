@@ -40,7 +40,7 @@ type MemcachedStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:subresource:scale:specpath=.spec.replicas,statuspath=.status.replicas,selectorpath=.status.selector
+// +kubebuilder:subresource:scale:specpath=.spec.size,statuspath=.status.replicas,selectorpath=.status.selector
 // Memcached is the Schema for the memcacheds API
 type Memcached struct {
 	metav1.TypeMeta   `json:",inline"`

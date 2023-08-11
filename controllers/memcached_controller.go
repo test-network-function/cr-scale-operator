@@ -114,7 +114,9 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 	}
 
 	// The idea is to update the selector to make some custom resources to be testable
+	log.Info("Updating selector ", selector.String())
 	memcached.Status.Selector = selector.String()
+	log.Info("Updating the status replicas to ", size)
 	memcached.Status.Replicas = size
 
 	// Update the Memcached status with the pod names

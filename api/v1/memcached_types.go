@@ -32,6 +32,8 @@ type MemcachedSpec struct {
 
 // MemcachedStatus defines the observed state of Memcached
 type MemcachedStatus struct {
+	Replicas int32  `json:"replicas,omitempty"`
+	Selector string `json:"selector,omitempty"`
 	// Conditions store the status conditions of the Memcached instances
 	// +operator-sdk:csv:customresourcedefinitions:type=status
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
@@ -39,6 +41,7 @@ type MemcachedStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:subresource:scale:specpath=.spec.size,statuspath=.status.replicas,selectorpath=.status.selector
 // +operator-sdk:csv:customresourcedefinitions:resources={{Deployment,v1,memcached-deployment}}
 
 // Memcached is the Schema for the memcacheds API

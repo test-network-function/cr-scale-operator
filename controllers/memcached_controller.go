@@ -133,12 +133,37 @@ func (r *MemcachedReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 		// Let's return the error for the reconciliation be re-trigged again
 		return ctrl.Result{}, err
 	}
+	log.Info("Finding the labels of the deployment")
+	// Find selector of the deployments
+	selector, err := metav1.LabelSelectorAsSelector(found.Spec.Selector)
+	if err != nil {
+		log.Error(err, "Error retrieving Deployment labels")
+		return ctrl.Result{}, err
+	}
+
+	log.Info("Reconciling the custom resource size with the deployment replicas")
+	// Re-fetch the memcached Custom Resource before update the status
+	// so that we have the latest state of the resource on the cluster and we will avoid
+	// raise the issue "the object has been modified, please apply
+	// your changes to the latest version and try again" which would re-trigger the reconciliation
+	if err := r.Get(ctx, req.NamespacedName, memcached); err != nil {
+		log.Error(err, "Failed to re-fetch memcached")
+		return ctrl.Result{}, err
+	}
+	size := *found.Spec.Replicas
+	memcached.Status.Selector = selector.String()
+	memcached.Status.Replicas = size
+	log.Info(fmt.Sprintf("Memcached desired size = %d", int(size)))
+	if err := r.Status().Update(ctx, memcached); err != nil {
+		return ctrl.Result{}, err
+	}
 
 	// The CRD API is defining that the Memcached type, have a MemcachedSpec.Size field
 	// to set the quantity of Deployment instances is the desired state on the cluster.
 	// Therefore, the following code will ensure the Deployment size is the same as defined
 	// via the Size spec of the Custom Resource which we are reconciling.
-	size := memcached.Spec.Size
+	log.Info("Reconciling the deployment size with custom resource size")
+	size = memcached.Spec.Size
 	if *found.Spec.Replicas != size {
 		found.Spec.Replicas = &size
 		if err = r.Update(ctx, found); err != nil {

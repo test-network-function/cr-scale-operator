@@ -1,3 +1,4 @@
 #!/bin/bash
 
-oc patch memcached banashri -p '{"spec":{"size": 5}}' --type=merge
+oc patch memcached memcached-sample -p '{"spec":{"size": 3}}'  --type=merge
+
